@@ -1,4 +1,6 @@
 🎬 Movie Recommender System
+
+
 Welcome to the Movie Recommender System, a Streamlit-based web application that suggests similar movies based on your selection. This project uses content-based filtering with precomputed similarity scores to recommend movies and display their posters interactively.
 
 
@@ -17,31 +19,53 @@ Pandas & NumPy – data processing
 Scikit-learn – cosine similarity
 TMDB API – fetch movie posters
 
-📂 Project Structure
-bash
-Copy
-Edit
-movie_recommender_system/
-├── Movie_reccomender_system.ipynb   # Main notebook
-├── app.py                           # Streamlit app script
-├── movies.csv                       # Movie metadata (title, ID, etc.)
-├── similarity.pkl                   # Precomputed similarity matrix (excluded from repo)
-├── requirements.txt                 # Dependencies
-└── README.md                        # You are here!
+Project Structure
+
+<img width="454" alt="image" src="https://github.com/user-attachments/assets/6a13d26e-7f12-4c2f-9c67-8bcb52021999" />
 
 
-🔧 Setup Instructions
+How the Recommendation Engine Works
+
+To generate accurate recommendations, we used a content-based filtering approach that creates a "tag" for each movie. Here's how:
+
+Data Preprocessing Steps
+
+Merged datasets: Combined tmdb_5000_movies.csv and tmdb_5000_credits.csv using the title.
+
+Selected meaningful columns:
+
+['movie_id', 'title', 'overview', 'genres', 'keywords', 'cast', 'crew']
+
+Transformed data:
+
+Used ast.literal_eval() to parse stringified lists in genres, keywords, cast, and crew.
+
+Extracted:
+Top 3 cast members
+Director from crew
+Tokenized and split overview text
+
+Cleaned tokens:
+Removed spaces in names: "Sam Worthington" → SamWorthington
+Converted everything to lowercase
+Joined all data into a single tag column
+
+Example tag:
+wizard magic school fantasy emmawatson danielradcliffe rupertgrint chriscolumbus
+
+Vectorization:
+Used CountVectorizer(max_features=5000, stop_words='english') from scikit-learn to convert tags to numeric vectors
+
+Similarity calculation:
+Applied cosine similarity to find the top 5 most similar movies based on tag vectors
+
+
+Setup Instructions
 1. Clone the repo
-bash
-Copy
-Edit
 git clone https://github.com/YourUsername/movie_recommender_system.git
 cd movie_recommender_system
 
 2. Install dependencies
-bash
-Copy
-Edit
 pip install -r requirements.txt
 
 3. Download or generate similarity.pkl
@@ -49,13 +73,10 @@ Due to GitHub’s file size limits, the file similarity.pkl (≈176MB) is not in
 
 You can either:
 
-🧮 Recompute it using the notebook Movie_reccomender_system.ipynb, or
+Recompute it using the notebook Movie_reccomender_system.ipynb, or
 Once you have it, place it in the root folder.
 
 4. Run the app
-bash
-Copy
-Edit
 streamlit run app.py
 
 How It Works
@@ -72,7 +93,7 @@ If you select:
 
 Each with poster images fetched live!
 
-🔑 TMDB API Key
+TMDB API Key
 This app uses TMDB (The Movie Database) API to fetch posters.
 You must generate your own key:
 Sign up at: https://www.themoviedb.org
